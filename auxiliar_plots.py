@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def plot_robot(ax, frames, show=False, origin=False):
+def plot_robot(ax, frames, show=False, origin=False, scale = 1):
     """
     Plots a robot based on a list of homogeneous transformation matrices.
 
@@ -16,7 +16,7 @@ def plot_robot(ax, frames, show=False, origin=False):
 
     # Plot each frame
     for i, frame in enumerate(frames):
-        plot_frame_a(ax, frame, str(i), show=False, show_origin=origin)
+        plot_frame_a(ax, frame, str(i), show=False, show_origin=origin, scale=scale)
 
     # Plot the transition between frames
     for i in range(len(frames) - 1):
@@ -27,7 +27,7 @@ def plot_robot(ax, frames, show=False, origin=False):
     if show:
         plt.show()
 
-def plot_frame_a(ax, FA, nome='A', show=False, show_origin=True):
+def plot_frame_a(ax, FA, nome='A', show=False, show_origin=True, scale = 1):
     """
     Plots a 3D frame {A} based on its homogeneous transformation matrix.
 
@@ -46,9 +46,9 @@ def plot_frame_a(ax, FA, nome='A', show=False, show_origin=True):
     origin = FA[:3, 3]
     
     # Axes directions
-    x_axis = FA[:3, 0]  # x-axis direction
-    y_axis = FA[:3, 1]  # y-axis direction
-    z_axis = FA[:3, 2]  # z-axis direction
+    x_axis = scale*FA[:3, 0]  # x-axis direction
+    y_axis = scale*FA[:3, 1]  # y-axis direction
+    z_axis = scale*FA[:3, 2]  # z-axis direction
 
     # Plot the x-axis
     ax.plot(
@@ -154,27 +154,30 @@ def _square_axes(ax):
     ax.set_ylim3d([origin[1] - radius, origin[1] + radius])
     ax.set_zlim3d([origin[2] - radius, origin[2] + radius])
 
-def plot_planar_robot(ax, frames, show=False, origin=False):
+def plot_planar_robot(ax, frames, show=False, origin=False, robot_color='k', scale = 1):
     """
     Plot top-down 2D view of a robot based on a list of homogeneous transformation matrices.
 
     Parameters:
-    ax : matplotlib.axes._subplots.Axes
-        The 2D axis to plot on.
-    frames : list
-        List of homogeneous transformation matrices (4x4).
+        ax : matplotlib.axes._subplots.Axes
+            The 2D axis to plot on.
+        frames : list
+            List of homogeneous transformation matrices (4x4).
+        show : bool
+            Whether to display the plot (default: False).
+        origin : bool
+            Whether to show the origin of each frame (default: False).
+        robot_color : list
+            Color of the robot links (default: 'k').
     """
     x_points = [frame[0, 3] for frame in frames]
     y_points = [frame[1, 3] for frame in frames]
     
-    ax.plot(x_points, y_points, marker='o', linestyle='-', color='b', markersize=6, label='Robot Links')
-    
-    if origin:
-        ax.scatter(0, 0, color='r', marker='x', label='Origin')
-
     for i, frame in enumerate(frames):
-        plot_frame_2d(ax, frame, str(i), show=False, show_origin=origin)
+        plot_frame_2d(ax, frame, str(i), show=False, show_origin=origin, scale=scale)
 
+    ax.plot(x_points, y_points, marker='o', linestyle='-', color=robot_color, markersize=7, markerfacecolor='r', label='Robot Links', linewidth=3)
+    
     ax.set_xlabel("X-axis")
     ax.set_ylabel("Y-axis")
     ax.set_title("Planar Robot Top-Down View")
@@ -185,7 +188,7 @@ def plot_planar_robot(ax, frames, show=False, origin=False):
     if show:
         plt.show()
 
-def plot_frame_2d(ax, FA, nome='A', show=False, show_origin=True):
+def plot_frame_2d(ax, FA, nome='A', show=False, show_origin=True, scale = 1):
     """
     Plots a 2D frame {A} based on its homogeneous transformation matrix.
 
@@ -202,10 +205,9 @@ def plot_frame_2d(ax, FA, nome='A', show=False, show_origin=True):
 
     # Origin of the frame
     origin = FA[:2, 3]
-    
     # Axes directions
-    x_axis = FA[:2, 0]  # x-axis direction
-    y_axis = FA[:2, 1]  # y-axis direction
+    x_axis = scale*FA[:2, 0]  # x-axis direction
+    y_axis = scale*FA[:2, 1]  # y-axis direction
 
     # Plot the x-axis
     ax.plot(
