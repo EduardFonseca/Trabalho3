@@ -27,7 +27,6 @@ def plot_robot(ax, frames, show=False, origin=False):
     if show:
         plt.show()
 
-
 def plot_frame_a(ax, FA, nome='A', show=False, show_origin=True):
     """
     Plots a 3D frame {A} based on its homogeneous transformation matrix.
@@ -154,6 +153,19 @@ def _square_axes(ax):
     ax.set_xlim3d([origin[0] - radius, origin[0] + radius])
     ax.set_ylim3d([origin[1] - radius, origin[1] + radius])
     ax.set_zlim3d([origin[2] - radius, origin[2] + radius])
+
+def plot_planar_robot(ax, frames, show=False, origin=False):
+    """
+    Plots a planar robot based on a list of homogeneous transformation matrices.
+
+    Parameters:
+    ax : matplotlib.axes._subplots.Axes
+        The 2D axis to plot on.
+    frames : list
+        List of homogeneous transformation matrices (3x3).
+    """
+    pass
+
 
 if __name__ == '__main__':
     A = np.eye(4)
