@@ -2,7 +2,20 @@ import sympy as sp
 import numpy as np
 
 def symbolic_DH(d, theta, a, alpha):
-    """Returns a symbolic DH transformation matrix"""
+    """
+    Retorna uma matriz de transformação DH simbólica ou numérica, dependendo do formato dos valores de entrada.
+    Se os valores de entrada forem simbólicos, a saída será uma matriz simbólica.
+    Se os valores de entrada forem numéricos, a saída será uma matriz numérica.
+    
+    Parâmetros:
+        d: float
+        theta: float
+        a: float
+        alpha: float
+    
+    Retorna:
+        sp.Matrix: matriz 4x4
+    """
     return sp.Matrix([
         [sp.cos(theta), -sp.sin(theta) * sp.cos(alpha),  sp.sin(theta) * sp.sin(alpha), a * sp.cos(theta)],
         [sp.sin(theta),  sp.cos(theta) * sp.cos(alpha), -sp.cos(theta) * sp.sin(alpha), a * sp.sin(theta)],
@@ -11,16 +24,17 @@ def symbolic_DH(d, theta, a, alpha):
     ])  # Using optimized DH matrix function
 
 def numeric_DH(d,theta,a,alpha):
-    '''
-    Create a Denavit-Hartenberg matrix using numerical values
-    Parameters:
+    """
+    Retorna uma matriz de transformação DH numérica.
+    Embora a funcao symbolic_DH possa ser usada para valores numéricos, esta funcao e cerca de 10x mais rapida.
+    Parâmetros:
         d: float
         theta: float
         a: float
         alpha: float
-    Returns:
-        np.array: 4x4 matrix
-    '''
+    Retorna:
+        np.array: matriz 4x4
+    """
     Tx = np.array([[1, 0, 0, a],
                    [0,1,0,0],
                    [0,0,1,0],
@@ -41,6 +55,3 @@ def numeric_DH(d,theta,a,alpha):
     return Tz @ Rz @ Tx @ Rx
 
 __all__ = ["symbolic_DH", "numeric_DH"]
-
-
-

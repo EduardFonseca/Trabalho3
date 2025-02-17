@@ -156,16 +156,90 @@ def _square_axes(ax):
 
 def plot_planar_robot(ax, frames, show=False, origin=False):
     """
-    Plots a planar robot based on a list of homogeneous transformation matrices.
+    Plot top-down 2D view of a robot based on a list of homogeneous transformation matrices.
 
     Parameters:
     ax : matplotlib.axes._subplots.Axes
         The 2D axis to plot on.
     frames : list
-        List of homogeneous transformation matrices (3x3).
+        List of homogeneous transformation matrices (4x4).
     """
-    pass
+    x_points = [frame[0, 3] for frame in frames]
+    y_points = [frame[1, 3] for frame in frames]
+    
+    ax.plot(x_points, y_points, marker='o', linestyle='-', color='b', markersize=6, label='Robot Links')
+    
+    if origin:
+        ax.scatter(0, 0, color='r', marker='x', label='Origin')
 
+    for i, frame in enumerate(frames):
+        plot_frame_2d(ax, frame, str(i), show=False, show_origin=origin)
+
+    ax.set_xlabel("X-axis")
+    ax.set_ylabel("Y-axis")
+    ax.set_title("Planar Robot Top-Down View")
+    ax.legend()
+    ax.grid(True)
+    ax.set_aspect('equal', adjustable='datalim')
+    
+    if show:
+        plt.show()
+
+def plot_frame_2d(ax, FA, nome='A', show=False, show_origin=True):
+    """
+    Plots a 2D frame {A} based on its homogeneous transformation matrix.
+
+    Parameters:
+    ax : matplotlib.axes.Axes
+        The 2D axis to plot on.
+    FA : numpy.ndarray
+        Homogeneous transformation matrix (4x4).
+    nome : str
+        Name of the frame to be displayed on the plot (default: 'A').
+    """
+    if FA.shape != (4, 4):
+        raise ValueError("FA must be a 4x4 homogeneous transformation matrix.")
+
+    # Origin of the frame
+    origin = FA[:2, 3]
+    
+    # Axes directions
+    x_axis = FA[:2, 0]  # x-axis direction
+    y_axis = FA[:2, 1]  # y-axis direction
+
+    # Plot the x-axis
+    ax.plot(
+        [origin[0], origin[0] + x_axis[0]],
+        [origin[1], origin[1] + x_axis[1]],
+        'b', linewidth=2
+    )
+    ax.text(
+        origin[0] + x_axis[0],
+        origin[1] + x_axis[1],
+        f"x_{{{nome}}}",
+        color='b'
+    )
+
+    # Plot the y-axis
+    ax.plot(
+        [origin[0], origin[0] + y_axis[0]],
+        [origin[1], origin[1] + y_axis[1]],
+        'r', linewidth=2
+    )
+    ax.text(
+        origin[0] + y_axis[0],
+        origin[1] + y_axis[1],
+        f"y_{{{nome}}}",
+        color='r'
+    )
+
+    # Plot the origin
+    if show_origin:    
+        ax.scatter(origin[0], origin[1], color='k', s=50)
+        ax.text(origin[0], origin[1], f"{{{nome}}}", color='k')
+    if show:
+        ax.grid(True)
+        plt.show()
 
 if __name__ == '__main__':
     A = np.eye(4)
