@@ -7,7 +7,7 @@ def symbolic_DH(d, theta, a, alpha):
         [sp.cos(theta), -sp.sin(theta) * sp.cos(alpha),  sp.sin(theta) * sp.sin(alpha), a * sp.cos(theta)],
         [sp.sin(theta),  sp.cos(theta) * sp.cos(alpha), -sp.cos(theta) * sp.sin(alpha), a * sp.sin(theta)],
         [0,             sp.sin(alpha),                  sp.cos(alpha),                  d],
-        [0,             0,                               0,                               1]
+        [0,             0,                               0,                             1]
     ])  # Using optimized DH matrix function
 
 def numeric_DH(d,theta,a,alpha):
