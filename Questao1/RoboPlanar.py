@@ -8,6 +8,9 @@ from auxiliar_plots import *
 import numpy as np
 import sympy as sp
 
+def RRR_inverse_kinematics():
+    pass
+
 
 if __name__ == "__main__":
     # Robô PLANAR RRR:
@@ -56,7 +59,7 @@ if __name__ == "__main__":
     F3 = F2 @ numeric_DH(0, theta[2], a[2], 0)
 
     frames = np.array([F0, F1, F2, F3])
-    
+
     # Create a Matplotlib figure
     fig, ax = plt.subplots(figsize=(6, 6))
 
