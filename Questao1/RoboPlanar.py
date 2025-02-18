@@ -35,9 +35,7 @@ def RRR_inverse_kinematics(x, y, phi, l):
 
     possible_solutions = []
     for i in range(1,3):
-        print((-1)**i)
         s2 = abs_s2*(-1)**i
-        print(s2)
         th2 = np.arctan2(s2, c2)
         # k = (l1+l2*c2)
         # j = l2*s2
