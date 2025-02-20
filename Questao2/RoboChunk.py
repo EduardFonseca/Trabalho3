@@ -64,6 +64,7 @@ if __name__ == "__main__":
     ]
 
     # Cálculo da matriz de transformação homogênea
+
     F = sp.eye(4)
     for params in dh_params:
         F = F @ symbolic_DH(*params)
@@ -89,9 +90,36 @@ if __name__ == "__main__":
     print(angles.shape)
 
     positions_list = np.random.random_integers(0, 19, 3)
-    for ang in angles:
-        # plot the robot, points and path made by the robot in the 3D space
-        pass
+    for i,angle in enumerate(angles):
+        if i in positions_list:
+            print(f"Posição: {i}")
+            print(f"Angulos: {angle}")
+            print(f"Posição Efetuador: {Pontos[:,:,i]}")
+
+            dh_params = [
+                (L[0], angle[0],  0, np.deg2rad(90)),
+                (0   , angle[1],  0, np.deg2rad(-90)),
+                (L[1], angle[2],  0, np.deg2rad(90)),
+                (0   , angle[3],  0, np.deg2rad(-90)),
+                (L[2], angle[4],  0, np.deg2rad(90)),
+                (0   , angle[5],  0, np.deg2rad(-90)),
+                (L[3], angle[6],  0, 0)
+            ]
+
+            frames = []
+            F = np.eye(4)
+            frames.append(F)
+            for params in dh_params:
+                F = F @ numeric_DH(*params)
+                frames.append(F)
+
+            plt.figure()
+            ax = plt.axes(projection='3d')
+            plot_points(ax, Pontos, plot_axes=True, trace=True, current_point=i)
+            plot_robot(ax, np.array(frames), scale=50, origin=True)
+
+    plt.show()
+
 
 
 

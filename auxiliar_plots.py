@@ -16,7 +16,7 @@ def plot_robot(ax, frames, show=False, origin=False, scale = 1):
 
     # Plot each frame
     for i, frame in enumerate(frames):
-        plot_frame_a(ax, frame, str(i), show=False, show_origin=origin, scale=scale)
+        plot_frame_a(ax, frame, str(i), show=False, show_origin=origin, scale=scale, show_label=False)
 
     # Plot the transition between frames
     for i in range(len(frames) - 1):

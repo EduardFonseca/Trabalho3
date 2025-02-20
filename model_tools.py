@@ -23,7 +23,7 @@ def symbolic_DH(d, theta, a, alpha):
         [0,             0,                               0,                             1]
     ])  # Using optimized DH matrix function
 
-def numeric_DH(d,theta,a,alpha):
+def numeric_DH(d, theta, a, alpha):
     """
     Retorna uma matriz de transformação DH numérica.
     Embora a funcao symbolic_DH possa ser usada para valores numéricos, esta funcao e cerca de 10x mais rapida.
