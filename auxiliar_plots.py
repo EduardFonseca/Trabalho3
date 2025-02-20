@@ -27,7 +27,7 @@ def plot_robot(ax, frames, show=False, origin=False, scale = 1):
     if show:
         plt.show()
 
-def plot_frame_a(ax, FA, nome='A', show=False, show_origin=True, scale = 1):
+def plot_frame_a(ax, FA, nome='A', show=False, show_origin=True, scale = 1, show_label = True):
     """
     Plots a 3D frame {A} based on its homogeneous transformation matrix.
 
@@ -57,13 +57,14 @@ def plot_frame_a(ax, FA, nome='A', show=False, show_origin=True, scale = 1):
         [origin[2], origin[2] + x_axis[2]],
         'b', linewidth=2
     )
-    ax.text(
-        origin[0] + x_axis[0],
-        origin[1] + x_axis[1],
-        origin[2] + x_axis[2],
-        f"x_{{{nome}}}",
-        color='b'
-    )
+    if show_label:
+        ax.text(
+            origin[0] + x_axis[0],
+            origin[1] + x_axis[1],
+            origin[2] + x_axis[2],
+            f"x_{{{nome}}}",
+            color='b'
+        )
 
     # Plot the y-axis
     ax.plot(
@@ -72,13 +73,14 @@ def plot_frame_a(ax, FA, nome='A', show=False, show_origin=True, scale = 1):
         [origin[2], origin[2] + y_axis[2]],
         'r', linewidth=2
     )
-    ax.text(
-        origin[0] + y_axis[0],
-        origin[1] + y_axis[1],
-        origin[2] + y_axis[2],
-        f"y_{{{nome}}}",
-        color='r'
-    )
+    if show_label:
+        ax.text(
+            origin[0] + y_axis[0],
+            origin[1] + y_axis[1],
+            origin[2] + y_axis[2],
+            f"y_{{{nome}}}",
+            color='r'
+        )
 
     # Plot the z-axis
     ax.plot(
@@ -87,18 +89,20 @@ def plot_frame_a(ax, FA, nome='A', show=False, show_origin=True, scale = 1):
         [origin[2], origin[2] + z_axis[2]],
         'g', linewidth=2
     )
-    ax.text(
-        origin[0] + z_axis[0],
-        origin[1] + z_axis[1],
-        origin[2] + z_axis[2],
-        f"z_{{{nome}}}",
-        color='g'
-    )
+    if show_label:
+        ax.text(
+            origin[0] + z_axis[0],
+            origin[1] + z_axis[1],
+            origin[2] + z_axis[2],
+            f"z_{{{nome}}}",
+            color='g'
+        )
 
     # Plot the origin
     if show_origin:    
-        ax.scatter(origin[0], origin[1], origin[2], color='k', s=50)
-        ax.text(origin[0], origin[1], origin[2], f"{{{nome}}}", color='k')
+        ax.scatter(origin[0], origin[1], origin[2], color='k', s=scale*0.5)
+        if show_label:
+            ax.text(origin[0], origin[1], origin[2], f"{{{nome}}}", color='k')
     if show:
         _square_axes(ax)
         plt.show()
@@ -242,6 +246,41 @@ def plot_frame_2d(ax, FA, nome='A', show=False, show_origin=True, scale = 1):
     if show:
         ax.grid(True)
         plt.show()
+
+
+def plot_points(ax, points, plot_axes=False, trace=False, current_point=None):
+    ''''
+    Plota os pontos no espaço 3D.
+    Parâmetros:
+        ax: matplotlib.axes._subplots.Axes3DSubplot
+            Eixo 3D onde os pontos serão plotados.
+        points: np.array
+            Matriz 4x4xN contendo as coordenadas homogeneas dos pontos.
+    '''
+    for i in range(points.shape[2]):
+        FA = points[:, :, i]
+
+        if FA.shape != (4, 4):
+            raise ValueError("FA must be a 4x4 homogeneous transformation matrix.")
+    
+        # Origin of the frame
+        origin = FA[:3, 3]
+
+        if plot_axes:
+            plot_frame_a(ax, FA, scale=50, show_origin=True, show_label=False)
+
+        else:
+            ax.scatter(origin[0], origin[1], origin[2], color='k', s=10)
+
+        if trace and i >= current_point:
+            #plot trace from previous point to point i 
+            ax.plot(
+                [points[0, 3, i-1], points[0, 3, i]],
+                [points[1, 3, i-1], points[1, 3, i]],
+                [points[2, 3, i-1], points[2, 3, i]],
+                color='m'
+            )
+    _square_axes(ax)
 
 if __name__ == '__main__':
     A = np.eye(4)

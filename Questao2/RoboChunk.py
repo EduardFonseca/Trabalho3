@@ -7,6 +7,8 @@ import numpy as np
 import sympy as sp
 import matplotlib.pyplot as plt
 from model_tools import *
+from auxiliar_plots import * 
+np.random.seed(0)
 
 def heart_path(n_points):
     """
@@ -18,8 +20,10 @@ def heart_path(n_points):
     
     Retorna:
         np.array: Matriz 16xN representando a trajetória do coração.
+
     """
     path = np.array([])
+    vector_path = np.array([])
     N = 2 * np.pi * np.linspace(0, 1, n_points)
     
     for i, p in enumerate(N):
@@ -30,12 +34,18 @@ def heart_path(n_points):
             [0, 0, 0, 1]
         ])
         #stack collumns in a vector
-        point = point[:3, :].flatten(order='F')
+
+        flat_point = point[:3, :].flatten(order='F')
         if i == 0:
+            vector_path = flat_point
             path = point
         else:
-            path = np.vstack((path, point))
-    return path
+            vector_path = np.vstack((vector_path, flat_point))
+            path = np.dstack((path, point))
+    return  vector_path ,path
+
+
+
 
 if __name__ == "__main__":
     # Definição das variáveis de junta simbólicas
@@ -70,10 +80,18 @@ if __name__ == "__main__":
 
     EF_pos = F_simplified.subs(list(zip(l, L)))
 
-    Caminho = heart_path(3)
+    Caminho, Pontos = heart_path(20)
+    print(Pontos.shape)
 
     angles = gradient_descent_ik(EF_pos, th, TH, Caminho, max_iter=1000, tol=0.1, alpha=0.3)
 
     print(angles)
     print(angles.shape)
+
+    positions_list = np.random.random_integers(0, 19, 3)
+    for ang in angles:
+        # plot the robot, points and path made by the robot in the 3D space
+        pass
+
+
 
