@@ -272,7 +272,7 @@ def plot_points(ax, points, plot_axes=False, trace=False, current_point=None):
         else:
             ax.scatter(origin[0], origin[1], origin[2], color='k', s=10)
 
-        if trace and i >= current_point:
+        if trace and i > current_point:
             #plot trace from previous point to point i 
             ax.plot(
                 [points[0, 3, i-1], points[0, 3, i]],

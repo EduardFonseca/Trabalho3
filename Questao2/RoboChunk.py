@@ -8,7 +8,7 @@ import sympy as sp
 import matplotlib.pyplot as plt
 from model_tools import *
 from auxiliar_plots import * 
-np.random.seed(0)
+np.random.seed(1)
 
 def heart_path(n_points):
     """
@@ -115,7 +115,7 @@ if __name__ == "__main__":
 
             plt.figure()
             ax = plt.axes(projection='3d')
-            plot_points(ax, Pontos, plot_axes=True, trace=True, current_point=i)
+            plot_points(ax, Pontos, plot_axes=False, trace=True, current_point=i)
             plot_robot(ax, np.array(frames), scale=50, origin=True)
 
     plt.show()
